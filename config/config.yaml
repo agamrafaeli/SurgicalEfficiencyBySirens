@@ -1,0 +1,15 @@
+timezone: "Asia/Jerusalem"
+exposure_windows_hours: [6, 24]
+did:
+  match_days: 14
+  match_duration_tolerance_min: 30
+  time_band: ["day", "evening", "night"]
+weights:
+  propensity_model: "logit"
+  stabilize: true
+survival:
+  horizon_hours: 48
+plots:
+  dpi: 200
+  theme: "default"
+random_seed: 42

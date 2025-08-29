@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stress-surgery"
+version = "0.1.0"
+description = "Analysis of surgical success under air-raid siren stress"
+readme = "MAIN_README.md"
+authors = [{name = "OpenAI", email = "info@example.com"}]
+requires-python = ">=3.11"
+dependencies = [
+    "typer",
+    "pandas",
+    "numpy",
+    "pyarrow",
+    "scikit-learn",
+    "statsmodels",
+    "lifelines",
+    "pandera",
+    "matplotlib",
+    "plotly",
+    "jinja2",
+]
+
+[project.optional-dependencies]
+report = ["weasyprint"]
+
+[project.scripts]
+stress-surgery = "stress_surgery.cli:app"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203"]
