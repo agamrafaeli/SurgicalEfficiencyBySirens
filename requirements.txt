@@ -1,0 +1,11 @@
+typer
+pandas
+numpy
+pyarrow
+scikit-learn
+statsmodels
+lifelines
+pandera
+matplotlib
+plotly
+jinja2
