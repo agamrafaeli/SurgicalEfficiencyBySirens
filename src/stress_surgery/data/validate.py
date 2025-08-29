@@ -11,11 +11,34 @@ from .schema import get_schema, SCHEMAS
 from ..utils import io
 
 
-def validate_file(path: Path, schema: pa.DataFrameSchema) -> Dict[str, int]:
-    """Validate a single CSV file, returning summary stats."""
+LEGACY_OUTCOME_COLUMNS = {
+    "success",
+    "successful",
+    "unsuccessful",
+    "outcome",
+    "outcome_success",
+    "success_flag",
+    "surgery_success",
+    "operation_success",
+}
+
+
+def _scan_legacy_outcomes(df) -> list[str]:
+    return [c for c in df.columns if c.lower() in LEGACY_OUTCOME_COLUMNS]
+
+
+def validate_file(path: Path, schema: pa.DataFrameSchema) -> Dict[str, object]:
+    """Validate a single CSV file, returning summary stats and warnings."""
     df = io.read_csv(path)
     schema.validate(df, lazy=True)
-    return {"rows": len(df), "columns": len(df.columns)}
+    warnings: list[str] = []
+    legacy = _scan_legacy_outcomes(df)
+    if legacy:
+        warnings.append(
+            "Found legacy outcome columns: " + ", ".join(sorted(legacy)) +
+            ". Replace with complication indicators: complication_intraop, complication_short_term, (optional) complication_long_term."
+        )
+    return {"rows": len(df), "columns": len(df.columns), "warnings": warnings}
 
 
 def validate_directory(data_dir: Path) -> None:

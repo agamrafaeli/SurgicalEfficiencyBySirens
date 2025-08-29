@@ -42,7 +42,10 @@ def make_synth_data(out_dir: Path) -> None:
             "end_ts": pd.to_datetime(["2024-01-01T09:00:00+00:00", "2024-01-01T11:00:00+00:00"]),
             "urgency": ["elective", "urgent"],
             "expected_duration_min": [60, 60],
-            "success_primary": [1, 0],
+            # Complication indicators (0/1)
+            "complication_intraop": [0, 1],
+            "complication_short_term": [0, 0],
+            "complication_long_term": [0, 0],
         }
     )
     ops.to_csv(out_dir / "operations.csv", index=False)
