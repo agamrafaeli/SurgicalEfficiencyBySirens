@@ -21,6 +21,7 @@ dependencies = [
     "matplotlib",
     "plotly",
     "jinja2",
+    "pyyaml",
 ]
 
 [project.optional-dependencies]

@@ -9,3 +9,4 @@ pandera
 matplotlib
 plotly
 jinja2
+pyyaml

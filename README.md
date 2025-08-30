@@ -2,6 +2,7 @@
 
 This repository estimates how acute air-raid siren stress affects surgical complication rates in Israeli hospitals. It treats siren occurrences as a natural experiment, compares exposed surgeries to suitable baselines, and adjusts for clinical complexity, staffing, fatigue, and workflow disruption. The codebase is fully CLI-driven, validated, and reproducible. The current pipeline models separate outcomes (intraoperative and short-term complications by default; long-term complications when available) and intentionally avoids a single composite “success” metric.
 
+
 ## What’s inside
 
 src/stress_surgery: data validation, feature engineering, models (logit/GEE, DiD, Cox survival, propensity weighting), EDA, sensitivity, and HTML reporting.
