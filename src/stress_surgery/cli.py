@@ -16,7 +16,7 @@ from .analysis import eda as eda_mod
 from .models import baseline_logit, gee_logit, did, cox_survival, weighting
 from .reporting import build_report
 
-app = typer.Typer(help="Tools for analysing surgical outcomes under siren stress")
+app = typer.Typer(help="Tools for analysing surgical complications under siren stress")
 
 
 @app.command()
@@ -53,13 +53,17 @@ def train(
     features: Path = typer.Option(..., help="Parquet file"),
     model: str = typer.Option("baseline", help="Model type"),
     seed: int = typer.Option(42, help="Random seed"),
+    outcome: str = typer.Option(
+        "complication_intraop",
+        help="Complication outcome column to model (e.g., complication_intraop, complication_short_term; long-term optional)",
+    ),
 ) -> None:
     """Train a model on features."""
     df = pd.read_parquet(features)
     if model == "baseline":
-        baseline_logit.fit(df, seed)
+        baseline_logit.fit(df, seed, outcome=outcome)
     elif model == "gee":
-        gee_logit.fit(df, seed)
+        gee_logit.fit(df, seed, outcome=outcome)
     elif model == "did":
         did.fit(df, seed)
     elif model == "cox":
@@ -76,10 +80,16 @@ def evaluate(
     model: str = typer.Option("baseline"),
     out: Path = typer.Option(..., help="Output metrics JSON"),
     seed: int = typer.Option(42),
+    outcome: str = typer.Option(
+        "complication_intraop",
+        help="Complication outcome column to model (baseline model only; long-term optional)",
+    ),
 ) -> None:
     """Evaluate a fitted model and write metrics."""
     df = pd.read_parquet(features)
-    result = baseline_logit.fit(df, seed) if model == "baseline" else {}
+    result = (
+        baseline_logit.fit(df, seed, outcome=outcome) if model == "baseline" else {}
+    )
     out.parent.mkdir(parents=True, exist_ok=True)
     pd.Series(result).to_json(out)
 

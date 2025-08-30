@@ -18,10 +18,16 @@ def _count_and_duration(sirens: pd.DataFrame, start: pd.Timestamp, window: timed
     mask = (sirens["siren_ts_end"] >= w_start) & (sirens["siren_ts_start"] <= start)
     subset = sirens[mask]
     count = len(subset)
-    dur = subset.apply(
-        lambda r: overlap_minutes(r.siren_ts_start.to_pydatetime(), r.siren_ts_end.to_pydatetime(), w_start.to_pydatetime(), start.to_pydatetime()),
-        axis=1,
-    ).sum()
+    # Use a robust generator-based sum to avoid dtype issues on empty frames
+    dur = sum(
+        overlap_minutes(
+            row.siren_ts_start.to_pydatetime(),
+            row.siren_ts_end.to_pydatetime(),
+            w_start.to_pydatetime(),
+            start.to_pydatetime(),
+        )
+        for _, row in subset.iterrows()
+    )
     return count, dur
 
 

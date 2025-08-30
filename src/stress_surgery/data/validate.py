@@ -7,12 +7,12 @@ from typing import Dict
 
 import pandera as pa
 
-from .schema import get_schema, SCHEMAS
+from .schema import SCHEMAS
 from ..utils import io
 
 
-def validate_file(path: Path, schema: pa.DataFrameSchema) -> Dict[str, int]:
-    """Validate a single CSV file, returning summary stats."""
+def validate_file(path: Path, schema: pa.DataFrameSchema) -> Dict[str, object]:
+    """Validate a single CSV file and return summary stats."""
     df = io.read_csv(path)
     schema.validate(df, lazy=True)
     return {"rows": len(df), "columns": len(df.columns)}
